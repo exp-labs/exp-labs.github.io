@@ -1,6 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Didomi SDK -->
+    <script type="text/javascript">
+      (function () {
+        function r(e) {
+          if (!window.frames[e]) {
+            if (document.body && document.body.firstChild) {
+              var t = document.body;
+              var n = document.createElement("iframe");
+              n.style.display = "none";
+              n.name = e;
+              n.title = e;
+              t.insertBefore(n, t.firstChild);
+            } else {
+              setTimeout(function () {
+                r(e);
+              }, 5);
+            }
+          }
+        }
+        function e(n, a, o, s, c) {
+          function e(e, t, n, r) {
+            if (typeof n !== "function") {
+              return;
+            }
+            if (!window[a]) {
+              window[a] = [];
+            }
+            var i = false;
+            if (c) {
+              i = c(e, r, n);
+            }
+            if (!i) {
+              window[a].push({
+                command: e,
+                version: t,
+                callback: n,
+                parameter: r,
+              });
+            }
+          }
+          e.stub = true;
+          e.stubVersion = 2;
+          function t(r) {
+            if (!window[n] || window[n].stub !== true) {
+              return;
+            }
+            if (!r.data) {
+              return;
+            }
+            var i = typeof r.data === "string";
+            var e;
+            try {
+              e = i ? JSON.parse(r.data) : r.data;
+            } catch (t) {
+              return;
+            }
+            if (e[o]) {
+              var a = e[o];
+              window[n](
+                a.command,
+                a.version,
+                function (e, t) {
+                  var n = {};
+                  n[s] = { returnValue: e, success: t, callId: a.callId };
+                  if (r.source) {
+                    r.source.postMessage(i ? JSON.stringify(n) : n, "*");
+                  }
+                },
+                a.parameter
+              );
+            }
+          }
+          if (typeof window[n] !== "function") {
+            window[n] = e;
+            if (window.addEventListener) {
+              window.addEventListener("message", t, false);
+            } else {
+              window.attachEvent("onmessage", t);
+            }
+          }
+        }
+        e("__uspapi", "__uspapiBuffer", "__uspapiCall", "__uspapiReturn");
+        r("__uspapiLocator");
+        e("__tcfapi", "__tcfapiBuffer", "__tcfapiCall", "__tcfapiReturn");
+        r("__tcfapiLocator");
+        (function (e) {
+          var t = document.createElement("link");
+          t.rel = "preconnect";
+          t.as = "script";
+          var n = document.createElement("link");
+          n.rel = "dns-prefetch";
+          n.as = "script";
+          var r = document.createElement("script");
+          r.id = "spcloader";
+          r.type = "text/javascript";
+          r["async"] = true;
+          r.charset = "utf-8";
+          var i =
+            "https://sdk.staging.privacy-center.org/" +
+            e +
+            "/loader.js?target=" +
+            document.location.hostname;
+          if (window.didomiConfig && window.didomiConfig.user) {
+            var a = window.didomiConfig.user;
+            var o = a.country;
+            var s = a.region;
+            if (o) {
+              i = i + "&country=" + o;
+              if (s) {
+                i = i + "&region=" + s;
+              }
+            }
+          }
+          t.href = "https://sdk.staging.privacy-center.org/";
+          n.href = "https://sdk.staging.privacy-center.org/";
+          r.src = i;
+          var c = document.getElementsByTagName("script")[0];
+          c.parentNode.insertBefore(t, c);
+          c.parentNode.insertBefore(n, c);
+          c.parentNode.insertBefore(r, c);
+        })("2843bbfc-b2c3-4e07-8e62-54ffebe355fc");
+      })();
+    </script>
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {
